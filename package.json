@@ -1,0 +1,21 @@
+{
+  "name": "matala1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "jquery.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.6.8",
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.2",
+    "mongodb": "^3.0.1",
+    "multer": "^1.3.0",
+    "redis": "^2.8.0",
+    "socket.io": "^2.0.4"
+  }
+}

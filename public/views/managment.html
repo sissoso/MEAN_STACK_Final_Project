@@ -1,0 +1,74 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="../javaScript/jquery.js"></script>
+    <script src="../javaScript/socket.io-client/dist/socket.io.js"></script>
+    <script src="../controllers/managementCtrl.js"></script>
+    <script src="../services/msgService.js"></script>
+
+
+</head>
+<body>
+<div ng-app="management" ng-controller="managementCtrl" class="container">
+    <h1> Messages List</h1>
+
+    <div id="searchBoxes">
+        Global Search Filter: <input type="text" ng-model="globalSearch.$">
+        Search by Text: <input type="text" ng-model="globalSearch.text">
+        Search by Screen: <input type="text" ng-model="globalSearch.screenId">
+    </div>
+
+
+
+    <table class="table">
+        <thead>
+       <tr>
+            <th>Name</th>
+            <th>Text</th>
+            <th>Images</th>
+            <th>Template</th>
+            <th>Time</th>
+            <th>Dates</th>
+           <th>Screen</th>
+           <th>Action</th>
+           <th>&nbsp;</th>
+
+            <!-- <td>{{ 5+5 }}</td>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <form name="myform">
+            <td><input class="form-control" ng-model="x.name" ng-required="true" ></td>
+            <td><input class="form-control" ng-model="x.text"></td>
+            <td><input class="form-control" ng-model="x.img"></td>
+            <td><input class="form-control" ng-model="x.template"></td>
+            <td><input class="form-control" ng-model="x.time" ></td>
+            <td><input class="form-control" ng-model="x.dates"></td>
+            <td><input class="form-control" ng-model="x.screenId" ></td>
+            <td><button class="btn btn-primary" ng-click="addMsg(x)">Add message</button></td>
+            <td><button class="btn btn-info" ng-click="update(x._id,x)">Update</button>&nbsp;&nbsp;
+                <button class="btn btn-info" ng-click="deselect()">Clear</button></td>
+            </form>
+        </tr>
+      <tr data-ng-repeat="x in messagesArray | filter:globalSearch">
+        <td>{{ x.name }}</td>
+        <td>{{ x.text }}</td>
+        <td>{{ x.img }}</td>
+        <td> {{x.template }}</td>
+        <td> {{x.time}}</td>
+        <td>{{x.dates}}</td>
+          <td>{{x.screenId}}</td>>
+          <td><button class ="btn btn-danger" ng-click="removeMsg(x._id)">Remove</button></td>
+          <td><button class = "btn btn-warning" ng-click="editMsg(x._id)">Edit</button></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+</body>
+</html>
