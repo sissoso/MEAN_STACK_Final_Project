@@ -19,12 +19,6 @@ var screenNum=' ';
 
 
 
-//send all the massages
-
-
-
-
-
 //send the screenId by sockets
 io.sockets.on('connection',function (socket) {
     socket.on('get screen num',function(){
@@ -78,8 +72,37 @@ io.sockets.on('connection',function (socket) {
         })
     })
 });
+/**
+ * get all available screens
+ */
+app.get('/loadScreens',function(req,res){
+
+    // Use connect method to connect to the Server
+    mongoClient.connect(url, function(err, db) {
+        if (err) {
+            console.log('Unable to connect to the mongoDB server. Error:', err);
+        }
+
+        db.db('messagesdb').collection('screens').find().toArray(function (err,doc)
+        {
+            if(err)
+            {
+                console.log("error while loading messages from collection");
+            }
+            else
+            {
+                res.send(doc);
 
 
+            }
+            db.close();
+        });
+
+
+
+    })
+
+});
 /**
  * get the data messages from db and sent to the page  without Sockets.
  */
@@ -132,6 +155,27 @@ app.post('/loadMessagesId' , function (req , res) {
 
 
 });
+/**
+ * post screen to the DB
+ */
+app.post('/addScreen' , function (req , res) {
+    console.log("   !!!!!!!!!!!!!!!!!!!!");
+    mongoClient.connect(url, function(err, db) {
+        if (err) {
+            console.log('Unable to connect to the mongoDB server. Error:', err);
+        }
+        try {
+            db.db('messagesdb').collection('screens').insertOne(req.body,function (err,doc) {
+                res.json(doc);
+            });
+
+        }catch(e){
+            console.log("cannot add screen to db "+e)
+        }
+    });
+
+
+});
 
 /**
  * delete message from DB
@@ -155,7 +199,28 @@ app.delete('/loadMessagesId/:id' , function (req,res) {
     });
 
 });
+/**
+ * delete screen from screens collection
+ */
+app.delete('/removeScreen/:id' , function (req,res) {
+    var id= req.params.id;
+    console.log(id);
 
+    mongoClient.connect(url, function(err, db) {
+        if (err) {
+            console.log('Unable to connect to the mongoDB server. Error:', err);
+        }
+        try {
+            db.db('messagesdb').collection('screens').deleteOne({"_id" : ObjectId(id) },function (err,doc) {
+                res.json(doc);
+            });
+
+        }catch(e){
+            console.log("cannot delete screen from db "+e)
+        }
+    });
+
+});
 /**
  * get specific msg by id from the DB
  */
@@ -219,9 +284,12 @@ app.put('/loadMessagesId/:id' , function(req,res){
 });
 
 //////////////////////////////
-app.get ('/managment', function (req,res){
-    res.sendFile(__dirname + '/public/views/managment.html');
+app.get ('/management', function (req,res){
+    res.sendFile(__dirname + '/public/views/management.html');
 });
 app.get ('/displayByFilter', function (req,res){
     res.sendFile(__dirname + '/public/views/displayByFilter.html');
+});
+app.get('/general',function (req,res) {
+    res.sendFile(__dirname + '/public/views/general.html')
 });

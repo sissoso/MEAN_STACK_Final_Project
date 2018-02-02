@@ -85,4 +85,6 @@ $scope.update=function(id,x){
         $scope.x="";
 
     }
+
+
 });

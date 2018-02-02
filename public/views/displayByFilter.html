@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
-    <script src="../javaScript/jquery.js"></script>
+
     <script src="../javaScript/socket.io-client/dist/socket.io.js"></script>
-    <script src="../controllers/displayByFilterCtrl.js"></script>
     <script type="text/javascript" src="javaScript/messages.js"></script>
+    <script src="../javaScript/jquery.js"></script>
+
+    <script src="../controllers/displayByFilterCtrl.js"></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -28,9 +31,9 @@
         </thead>
         <tbody>
         <tr>
-            <td><input type="date" step="1" class="form-control" ng-model="display_date" name="date"></td>
-            <td><input class="form-control" ng-model="display_hour" name="hour"></td>
-            <td><input class="form-control" ng-model="display_screen" name="screen"></td>
+            <td><input type="date" step="1" class="form-control" ng-model="display_date" ></td>
+            <td><input class="form-control" ng-model="display_hour"></td>
+            <td><select class="form-control" ng-model="display_screen"  ng-options="x.screen for x in availableScreens"></select></td>
             <td><button class="btn btn-info" ng-click="submit(display_date,display_hour,display_screen)">Show</button></td>
 
         </tr>

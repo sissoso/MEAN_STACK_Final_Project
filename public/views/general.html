@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="../javaScript/ng-file-upload/dist/ng-file-upload.js"></script>
+    <script src="../javaScript/jquery.js"></script>
+    <script src="../controllers/generalCtrl.js"></script>
+
+    <title>Title</title>
+
+
+
+</head>
+<body>
+<div ng-app="general" ng-controller="generalCtrl" class="container">
+
+    <table class="table">
+        <th>Screens</th>
+        <tr ng-repeat="screen in screens">
+            <td>{{screen.screen}}</td>
+            <td><button class ="btn btn-danger" ng-click="removeScreen(screen._id)">Remove</button></td>
+        </tr>
+    </table>
+    <input class="form-control" ng-model="screenNum.screen" ng-required="true" >
+    <button class ="btn btn-primary" ng-click="addScreen(screenNum)">Add Screen</button>
+
+
+</div>
+</body>
+</html>
