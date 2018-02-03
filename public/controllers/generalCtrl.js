@@ -1,8 +1,18 @@
-var app = angular.module('general', ['ngFileUpload']);
+var app = angular.module('general', ['angularFileUpload']);
 
 
-app.controller('generalCtrl', function($scope, $http,Upload)
+app.controller('generalCtrl', function($scope, $http,FileUploader)
 {
+
+
+    /**
+     * uploader
+     */
+    var uploader=$scope.uploader=new FileUploader({
+        url:'/public/templates'
+    });
+
+
     var availabeScreens;
 
     var refresh=function()

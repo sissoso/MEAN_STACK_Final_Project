@@ -4,8 +4,8 @@
 var app = angular.module('management', []);
 app.controller('managementCtrl', function($scope, $http, msgService) {
 
-    var refresh= function(){
 
+    var refresh= function(){
     $http.get('/loadMessagesId')
         .success(function(response) {
             $scope.messagesArray = response;

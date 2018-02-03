@@ -8,6 +8,7 @@ $scope.display_screen=3;
     var refresh=function()
     {
         $http.get('/loadScreens').success(function (response) {
+            console.log("response to screens: "+response);
             $scope.screens = response;
             $scope.availableScreens = response;
 

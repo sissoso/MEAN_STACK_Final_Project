@@ -1,6 +1,8 @@
 
 
 var express = require('express');
+var formidable = require('formidable');
+var fs = require('fs');
 var app = express();
 var bodyParser= require("body-parser");
 
@@ -9,7 +11,7 @@ app.use(express.static(__dirname+'/public'));
 app.use(bodyParser.json());
 
 var mongoClient = require('mongodb').MongoClient;
-var url='mongodb://localhost:27017/messagesdb';
+var url='mongodb://localhost:27017/messagesDB';
 var ObjectId=require('mongodb').ObjectID;
 
 var server=app.listen(8080);
@@ -33,7 +35,7 @@ io.sockets.on('connection',function (socket) {
             }
 
 
-            db.db('messagesdb').collection('messages').find('').toArray(function (err, doc) {
+            db.db('messagesDB').collection('messages').find('').toArray(function (err, doc) {
                 if (err) {
                     console.log("error while loading messages from collection");
                 }
@@ -58,7 +60,7 @@ io.sockets.on('connection',function (socket) {
                 return "{screenId :"+screenId+"}" ;
             }
             console.log(query(screenId));
-            db.db('messagesdb').collection('messages').find(query(screenId)).toArray(function (err, doc) {
+            db.db('messagesDB').collection('messages').find(query(screenId)).toArray(function (err, doc) {
                 if (err) {
                     console.log("error while loading messages from collection");
                 }
@@ -83,7 +85,7 @@ app.get('/loadScreens',function(req,res){
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
 
-        db.db('messagesdb').collection('screens').find().toArray(function (err,doc)
+        db.db('messagesDB').collection('screens').find().toArray(function (err,doc)
         {
             if(err)
             {
@@ -91,6 +93,7 @@ app.get('/loadScreens',function(req,res){
             }
             else
             {
+                console.log("on server java script file: response from db: "+doc);
                 res.send(doc);
 
 
@@ -115,7 +118,7 @@ app.get ('/loadMessagesId', function (req,res) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
 
-         db.db('messagesdb').collection('messages').find().toArray(function (err,doc)
+         db.db('messagesDB').collection('messages').find().toArray(function (err,doc)
         {
             if(err)
             {
@@ -144,7 +147,7 @@ app.post('/loadMessagesId' , function (req , res) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
         try {
-            db.db('messagesdb').collection('messages').insertOne(req.body,function (err,doc) {
+            db.db('messagesDB').collection('messages').insertOne(req.body,function (err,doc) {
                 res.json(doc);
             });
 
@@ -165,7 +168,7 @@ app.post('/addScreen' , function (req , res) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
         try {
-            db.db('messagesdb').collection('screens').insertOne(req.body,function (err,doc) {
+            db.db('messagesDB').collection('screens').insertOne(req.body,function (err,doc) {
                 res.json(doc);
             });
 
@@ -189,7 +192,7 @@ app.delete('/loadMessagesId/:id' , function (req,res) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
         try {
-            db.db('messagesdb').collection('messages').deleteOne({"_id" : ObjectId(id) },function (err,doc) {
+            db.db('messagesDB').collection('messages').deleteOne({"_id" : ObjectId(id) },function (err,doc) {
                 res.json(doc);
             });
 
@@ -211,7 +214,7 @@ app.delete('/removeScreen/:id' , function (req,res) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
         try {
-            db.db('messagesdb').collection('screens').deleteOne({"_id" : ObjectId(id) },function (err,doc) {
+            db.db('messagesDB').collection('screens').deleteOne({"_id" : ObjectId(id) },function (err,doc) {
                 res.json(doc);
             });
 
@@ -233,7 +236,7 @@ app.get('/loadMessagesId/:id' , function (req, res) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
         try {
-            db.db('messagesdb').collection('messages').findOne({"_id": ObjectId(id)}, function (err, doc) {
+            db.db('messagesDB').collection('messages').findOne({"_id": ObjectId(id)}, function (err, doc) {
                 res.json(doc);
             });
 
@@ -256,7 +259,7 @@ app.put('/loadMessagesId/:id' , function(req,res){
             console.log('Unable to connect to the mongoDB server. Error:', err);
         }
         try {
-            db.db('messagesdb').collection('messages').findOneAndUpdate({"_id" : ObjectId(id) }, {$set: {"name" : req.body.name,
+            db.db('messagesDB').collection('messages').findOneAndUpdate({"_id" : ObjectId(id) }, {$set: {"name" : req.body.name,
           "text" : req.body.text , "img" : req.body.img , "template" : req.body.template ,"time" : req.body.time , "dates" : req.body.dates}}
                 , function (err, doc) {
                 res.json(doc);
@@ -292,4 +295,19 @@ app.get ('/displayByFilter', function (req,res){
 });
 app.get('/general',function (req,res) {
     res.sendFile(__dirname + '/public/views/general.html')
+});
+//get the template from server
+// Get the correct template from the client
+app.post('/public/templates',function (req,res) {
+    console.log('*** UploadTemplate API OK');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+        var oldpath = files.file.path;
+        var newpath = 'public/templates/' + files.file.name;
+        fs.rename(oldpath, newpath, function (err) {
+            if (err) throw err;
+            res.write('File uploaded and moved!');
+            res.end();
+        });
+    });
 });
